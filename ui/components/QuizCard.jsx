@@ -2,20 +2,17 @@ import questions from "../../questions.json";
 import { Card } from "@rneui/themed";
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from "react-native";
 import { useState } from "react";
-<<<<<<< HEAD:ui/components/Quiz.jsx
-export default function QuizCard({ question, options, selectedAnswer, setSelectedAnswer, correctAnswer }) {
-=======
 import SlideToReveal from "./SlideToReveal";
 import { Alert } from "react-native";
 
-export default function QuizCard({ question, options }) {
->>>>>>> 1893b7d8088506b96410c473e958b415fd576b59:ui/components/QuizCard.jsx
+export default function QuizCard({ question, options, selectedAnswer, setSelectedAnswer, correctAnswer }) {
+
   const allQuestions = questions.questions.flatMap((topic) => topic.questions);
   const [questionList, setQuestionList] = useState(allQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
 
-<<<<<<< HEAD:ui/components/Quiz.jsx
+
   const getButtonStyle = (index) => {
     console.log(`Button style function triggered for option: ${index}`); 
     if (selectedAnswer === null) return styles.button;
@@ -26,7 +23,7 @@ export default function QuizCard({ question, options }) {
       return { ...styles.button, backgroundColor: "red" };
     }
     return styles.button;
-=======
+  }
   const handleNextQuestion = () => {
     setCurrentQuestion(questionList[currentQuestionIndex + 1]);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -36,12 +33,12 @@ export default function QuizCard({ question, options }) {
     // some reveal answer logic here. for now just log the answer
     Alert.alert('Reveal Answer', currentQuestion.answer);
     console.log(currentQuestion.answer);
->>>>>>> 1893b7d8088506b96410c473e958b415fd576b59:ui/components/QuizCard.jsx
+
   }
 
   return (
 <Card containerStyle={styles.card}>
-<<<<<<< HEAD:ui/components/Quiz.jsx
+
         <Card.Title>{currentQuestion.question}</Card.Title>
         <Card.Divider />
         {currentQuestion.options.map((option, index) => (
@@ -53,27 +50,14 @@ export default function QuizCard({ question, options }) {
           <Text>{option}</Text>
         </TouchableOpacity>
       ))}
-=======
-        <Card.Title style={styles.question}>{currentQuestion.question}</Card.Title>
-        <TouchableOpacity style={styles.button}>
-          <Text>{currentQuestion.options[0]}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>{currentQuestion.options[1]}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>{currentQuestion.options[2]}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>{currentQuestion.options[3]}</Text>
-      </TouchableOpacity>
+
       
       <SlideToReveal onEndReached={handleSlideToReveal} />
 
       <TouchableOpacity style={styles.button} onPress={handleNextQuestion}>
         <Text>Next</Text>
       </TouchableOpacity>
->>>>>>> 1893b7d8088506b96410c473e958b415fd576b59:ui/components/QuizCard.jsx
+
       </Card>
   );
 }
@@ -102,4 +86,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+
 });
