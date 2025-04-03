@@ -11,35 +11,41 @@ import { useState } from "react";
 import SlideToReveal from "./SlideToReveal";
 import { Alert } from "react-native";
 
-export default function QuizCard({ question, options, selectedAnswer, setSelectedAnswer, correctAnswer }) {
-
+export default function QuizCard({
+  question,
+  options,
+  selectedAnswer,
+  setSelectedAnswer,
+  correctAnswer,
+}) {
   const allQuestions = questions.questions.flatMap((topic) => topic.questions);
   const [questionList, setQuestionList] = useState(allQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
 
+  // const getButtonStyle = (index) => {
+  //   console.log(`Button style function triggered for option: ${index}`);
+  //   if (selectedAnswer === null) return styles.button;
+  //   if (selectedAnswer === index && selectedAnswer === correctAnswer) {
+  //     return {...styles.button, backgroundColor:"green"};
+  //   }
+  //   if (selectedAnswer === index && selectedAnswer !== correctAnswer) {
+  //     return { ...styles.button, backgroundColor: "red" };
+  //   }
+  //   return styles.button;
+  // }
 
-  const getButtonStyle = (index) => {
-    console.log(`Button style function triggered for option: ${index}`); 
-    if (selectedAnswer === null) return styles.button;
-    if (selectedAnswer === index && selectedAnswer === correctAnswer) {
-      return {...styles.button, backgroundColor:"green"};
-    } 
-    if (selectedAnswer === index && selectedAnswer !== correctAnswer) {
-      return { ...styles.button, backgroundColor: "red" };
-    }
-    return styles.button;
-  }
   const handleNextQuestion = () => {
     setCurrentQuestion(questionList[currentQuestionIndex + 1]);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setShowCorrectAnswer(false);
   };
 
-  const handleOptionPress = (option) => {
-    if (option === currentQuestion.options[currentQuestion.correctAnswer]) {
+  const handleOptionPress = (index) => {
+    if (index === currentQuestion.correctAnswer) {
       Alert.alert("Correct Answer", "You are correct!");
+      setShowCorrectAnswer(true);
     } else {
       Alert.alert("Incorrect Answer", "You are incorrect!");
     }
@@ -57,15 +63,14 @@ export default function QuizCard({ question, options, selectedAnswer, setSelecte
   };
 
   return (
-  <Card containerStyle={styles.card}>
-
-        <Card.Title>{currentQuestion.question}</Card.Title>
-        <Card.Divider />
-        {currentQuestion.options.map((option, index) => (
+    <Card containerStyle={styles.card}>
+      <Card.Title>{currentQuestion.question}</Card.Title>
+      <Card.Divider />
+      {currentQuestion.options.map((option, index) => (
         <TouchableOpacity
           key={index}
           style={getButtonStyle(index)} // Use the index to check the button style
-          onPress={() => selectedAnswer === null && setSelectedAnswer(index)} // Set selectedAnswer as index
+          onPress={() => handleOptionPress(index)} // Set selectedAnswer as index
         >
           <Text>{option}</Text>
         </TouchableOpacity>
@@ -77,7 +82,6 @@ export default function QuizCard({ question, options, selectedAnswer, setSelecte
         <Text>Next</Text>
       </TouchableOpacity>
     </Card>
-
   );
 }
 
@@ -108,5 +112,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-
 });
