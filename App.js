@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import questions from "./questions.json";
-import QuizCard from "./ui/components/Quiz";
+import QuizCard from "./ui/components/QuizCard";
 
 export default function App() {
   const allQuestions = questions.questions.flatMap((topic) => topic.questions);
