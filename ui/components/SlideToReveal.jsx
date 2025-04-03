@@ -11,7 +11,7 @@ export default function SlideToReveal({ onEndReached }) {
       containerStyle={styles.container}
       sliderElement={<View style={styles.sliderButton} />}
     >
-      <Text style={styles.text}>Slide to reveal answer →</Text>
+      <Text style={styles.text}>Swipe for at se svaret</Text>
     </Slider>
   );
 }
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   container: {
     margin: 8,
     backgroundColor: "#f5f5f5",
-    borderRadius: 25,
+    borderRadius: 20,
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
@@ -34,11 +34,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    position: 'absolute', // Fix to the bottom of the screen
+    bottom: 70, // Added space from the bottom edge
+    left: '%', // Center the element horizontally
   },
   sliderButton: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 20,
     margin: 4,
     backgroundColor: "#d3d3d3",
   },

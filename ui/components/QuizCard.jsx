@@ -1,15 +1,8 @@
 import questions from "../../questions.json";
 import { Card } from "@rneui/themed";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, } from "react-native";
 import { useState } from "react";
 import SlideToReveal from "./SlideToReveal";
-import { Alert } from "react-native";
 
 export default function QuizCard({
   question,
@@ -24,22 +17,12 @@ export default function QuizCard({
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
 
-  // const getButtonStyle = (index) => {
-  //   console.log(`Button style function triggered for option: ${index}`);
-  //   if (selectedAnswer === null) return styles.button;
-  //   if (selectedAnswer === index && selectedAnswer === correctAnswer) {
-  //     return {...styles.button, backgroundColor:"green"};
-  //   }
-  //   if (selectedAnswer === index && selectedAnswer !== correctAnswer) {
-  //     return { ...styles.button, backgroundColor: "red" };
-  //   }
-  //   return styles.button;
-  // }
-
   const handleNextQuestion = () => {
-    setCurrentQuestion(questionList[currentQuestionIndex + 1]);
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setShowCorrectAnswer(false);
+    if (currentQuestionIndex < questionList.length - 1) {
+      setCurrentQuestion(questionList[currentQuestionIndex + 1]);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setShowCorrectAnswer(false);
+    }
   };
 
   const handleOptionPress = (index) => {
@@ -48,6 +31,13 @@ export default function QuizCard({
       setShowCorrectAnswer(true);
     } else {
       Alert.alert("Incorrect Answer", "You are incorrect!");
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestion(questionList[currentQuestionIndex - 1]);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -63,42 +53,71 @@ export default function QuizCard({
   };
 
   return (
-    <Card containerStyle={styles.card}>
-      <Card.Title>{currentQuestion.question}</Card.Title>
-      <Card.Divider />
-      {currentQuestion.options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={getButtonStyle(index)} // Use the index to check the button style
-          onPress={() => handleOptionPress(index)} // Set selectedAnswer as index
-        >
-          <Text>{option}</Text>
-        </TouchableOpacity>
-      ))}
+    <SafeAreaView style={styles.container}>
+      <Card containerStyle={styles.card}>
+        <Card.Title style={styles.question}>{currentQuestion.question}</Card.Title>
 
+        {/* Options with A, B, C, D */}
+        {currentQuestion.options.map((option, index) => {
+          const label = String.fromCharCode(65 + index); // Converts index to A, B, C, D
+          return (
+            <TouchableOpacity
+              key={index}
+              style={getButtonStyle(index)} // Use the index to check the button style
+              onPress={() => handleOptionPress(index)} // Set selectedAnswer as index
+            >
+              <Text style={styles.optionText}>{`${label}: ${option}`}</Text>
+            </TouchableOpacity>
+          );
+        })}
+
+        {/* Button Row */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.navButton} onPress={handlePreviousQuestion} disabled={currentQuestionIndex === 0}>
+            <Text style={styles.navButtonText}>Forrige</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.navButton} onPress={handleNextQuestion} disabled={currentQuestionIndex === questionList.length - 1}>
+            <Text style={styles.navButtonText}>Næste</Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+
+      {/* Slide to reveal answer */}
       <SlideToReveal onEndReached={handleSlideToReveal} />
-
-      <TouchableOpacity style={styles.button} onPress={handleNextQuestion}>
-        <Text>Next</Text>
-      </TouchableOpacity>
-    </Card>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "space-between", // Ensure content takes all available space
+  },
   card: {
     flex: 1,
-    width: "100%",
-    marginTop: 80,
-    margin: 0,
-    padding: 20,
-    borderRadius: 0,
+    width: "90%",  // Reduced the width to add space to both sides
+    marginTop: 20,
+    marginHorizontal: "5%",  // Added space to both sides (left and right)
+    padding: 18,
+    borderRadius: 20,
+    marginBottom: 160, // Added space for slide button
+    backgroundColor: "#f5f5f5", // Gray background like the swipe button
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   button: {
-    backgroundColor: "lightblue",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#d9f0ff",  
+    padding: 12,
+    borderRadius: 20,  
     margin: 10,
+  },
+  optionText: {
+    fontSize: 13,  // Increased font size
   },
   correctButton: {
     backgroundColor: "#90EE90",
@@ -106,10 +125,29 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 18,
     fontWeight: "bold",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
-    borderRadius: 10,
+    backgroundColor: '#fff',
+    borderRadius: 20,
     padding: 10,
+    marginBottom: 20,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 20,
+  },
+  navButton: {
+    backgroundColor: "#d9f0ff",  
+    paddingVertical: 18,  
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    flex: 1,
+    marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  navButtonText: {
+    fontSize: 16,  
+    fontWeight: "bold",
   },
 });
