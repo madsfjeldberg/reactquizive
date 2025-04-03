@@ -11,13 +11,26 @@ import { useState } from "react";
 import SlideToReveal from "./SlideToReveal";
 import { Alert } from "react-native";
 
-export default function QuizCard({ question, options }) {
+export default function QuizCard({ question, options, selectedAnswer, setSelectedAnswer, correctAnswer }) {
+
   const allQuestions = questions.questions.flatMap((topic) => topic.questions);
   const [questionList, setQuestionList] = useState(allQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
 
+
+  const getButtonStyle = (index) => {
+    console.log(`Button style function triggered for option: ${index}`); 
+    if (selectedAnswer === null) return styles.button;
+    if (selectedAnswer === index && selectedAnswer === correctAnswer) {
+      return {...styles.button, backgroundColor:"green"};
+    } 
+    if (selectedAnswer === index && selectedAnswer !== correctAnswer) {
+      return { ...styles.button, backgroundColor: "red" };
+    }
+    return styles.button;
+  }
   const handleNextQuestion = () => {
     setCurrentQuestion(questionList[currentQuestionIndex + 1]);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -44,34 +57,19 @@ export default function QuizCard({ question, options }) {
   };
 
   return (
-    <Card containerStyle={styles.card}>
-      <Card.Title style={styles.question}>
-        {currentQuestion.question}
-      </Card.Title>
-      <TouchableOpacity
-        style={getButtonStyle(0)}
-        onPress={() => handleOptionPress(currentQuestion.options[0])}
-      >
-        <Text>{currentQuestion.options[0]}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={getButtonStyle(1)}
-        onPress={() => handleOptionPress(currentQuestion.options[1])}
-      >
-        <Text>{currentQuestion.options[1]}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={getButtonStyle(2)}
-        onPress={() => handleOptionPress(currentQuestion.options[2])}
-      >
-        <Text>{currentQuestion.options[2]}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={getButtonStyle(3)}
-        onPress={() => handleOptionPress(currentQuestion.options[3])}
-      >
-        <Text>{currentQuestion.options[3]}</Text>
-      </TouchableOpacity>
+  <Card containerStyle={styles.card}>
+
+        <Card.Title>{currentQuestion.question}</Card.Title>
+        <Card.Divider />
+        {currentQuestion.options.map((option, index) => (
+        <TouchableOpacity
+          key={index}
+          style={getButtonStyle(index)} // Use the index to check the button style
+          onPress={() => selectedAnswer === null && setSelectedAnswer(index)} // Set selectedAnswer as index
+        >
+          <Text>{option}</Text>
+        </TouchableOpacity>
+      ))}
 
       <SlideToReveal onEndReached={handleSlideToReveal} />
 
@@ -79,6 +77,7 @@ export default function QuizCard({ question, options }) {
         <Text>Next</Text>
       </TouchableOpacity>
     </Card>
+
   );
 }
 
@@ -109,4 +108,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+
 });
