@@ -2,8 +2,8 @@ import { useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import questions from "./questions.json";
-import QuizCard from "./ui/components/Quiz";
-import ConfettiCannon from "react-native-confetti-cannon";
+import QuizCard from "./ui/components/QuizCard";
+
 
 export default function App() {
   const allQuestions = questions.questions.flatMap((topic) => topic.questions);
@@ -12,10 +12,7 @@ export default function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const triggerConfetti = () => {
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 2000); // Reset after 2 seconds
-  };
+
 
   const handleAnswer = (selectedOption) => {
     setSelectedAnswer(selectedOption);
@@ -26,19 +23,12 @@ export default function App() {
       <QuizCard
         question={currentQuestion}
         selectedAnswer={selectedAnswer}
-        setSelectedAnswer={handleAnswer} // Pass setSelectedAnswer here
+        setSelectedAnswer={handleAnswer}
         correctAnswer={currentQuestion.correctAnswer}
         style={styles.quiz}
       />
 
-      <Button title="🎉 Start Confetti" onPress={triggerConfetti} />
-      {showConfetti && (
-        <ConfettiCannon 
-        count={200} 
-        origin={{ x: 200, y: 0 }}
-        style={styles.confetti}
-         />)
-         }
+    
       <StatusBar style="auto" />
     </View>
   );
