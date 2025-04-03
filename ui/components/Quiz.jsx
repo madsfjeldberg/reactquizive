@@ -7,6 +7,7 @@ export default function QuizCard({ question, options }) {
   const [questionList, setQuestionList] = useState(allQuestions);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
 
+  //hello!
   return (
 <Card containerStyle={styles.card}>
         <Card.Title>{currentQuestion.question}</Card.Title>
